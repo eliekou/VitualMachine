@@ -1,0 +1,91 @@
+on a le prograamme assembleur qui traduit le language assembly en instruction qu'on donne a la machine en C
+
+
+
+Les instructions sont traduit en hexadécimal dans le wiki-books
+
+load r1 #100
+load r2 #200
+add r2 r1 r0
+halt
+
+
+4 bits: 1er bitq l'instruction,deuxième bit le registre deux autres bits la valeur en mémoire en héxadécimal
+
+ISS: programme  qui permet d'émuler un jeu d'instruction
+
+1) On code nous-meme un simulateur de jeu d'instruction
+2) assembleur: programme qui traduit le language assembleur en binaire
+
+
+SHIFT EN INFORMATIQUE:
+000100
+<<2 shift deux vers la gauche(On rajoute deux zéros à dorite)
+010000
+
+
+Cas d'un nombre signé: décalage a droite, division par 2, il faut donc garder le bit de signe.
+111001
+>>2
+On place les zéros
+111110
+
+
+jump nom_de_fonction ->puis quand la fonction est terminé, on va a l'adresse sauvegardé dans le registre de destination, ce registre sert a sauvegarder l'adresse de retour.
+
+li : stocke une valeur dans un registre
+32 bits
+
+16 à 32 bits
+- bit négatif, on remplis tout à gauche par des 1
+31-26:OPCODE
+ADD  R4 R4 1
+OPCODE=3
+RD=4
+RS=4
+IM=1
+instr=(3<<26)/(4<<21)/(4<<16)/1;
+donne 0000110000000
+
+
+
+
+
+gngb ecrit dans le language machine de mon place
+fichier source->compil->language assembleur->assemblage->fichier binaire
+
+
+adreesse/contenu du fichier/sémantique
+
+mémoire adressable par octet
+bus de donnée de 32 ou 64 bits
+
+
+si l avaleur est négative on vient forcer tout les autre sbits à 1.
+
+
+
+PLUS SIMPLE
+
+ON COMPILE UN FICHIER D'instructions, transformation en un fichie rbinaire beacoup plus simple, a partir de ce binaire le processuer va agir sur la meoire et les registres
+ce fichier sera beaucoup plus simple pour lui.
+Les labels, quand on les rencontre dans l'assembleur on incrémente pas, ils ne rentrent pas dans le binaire, il servent pour les branchements, à savoir à quelle adresse on va revenir. On revient à l'adresse 14, la ou on a le label.
+Après quand on traduit en binaire, on va traduire le texte. On ne pourra plus changer l'adresse de branchement.
+
+ISA:Interface software hardware
+
+ISA 
+
+
+Comment réaliser un processeur matèriel?
+
+32 registres
+Unité arythmétique et logique
+Signal d'adresse d'instruction
+Bus d'instruction de notre processeur
+Multiplexeur
+add rd, rs1,rs2
+
+
+
+label toujours prendre la version avec trois instructions
