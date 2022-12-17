@@ -102,7 +102,7 @@ void decode_I_instruction(uint32_t instr)
 void decode_JR_instruction(uint32_t instr){
     
     rd =( instr >> 21) & 0x1f;
-    ra =( instr >> 16);
+    ra =( instr >> 16)& 0x1f;
     printf("Le registre du jump est%lu\n",ra);
     //rd =0;
 }
@@ -264,7 +264,7 @@ void jump(){
     printf("jump r%d r%d\n",ra,rd);
     printf("Le programme counter est maintenant à la valeur%lu\n",ra);
     rd = PC;//On garde dans rd la valeur actuel du register
-    PC = ra;//PC=3??
+    PC = regs[ra];//PC=3??
     printf("Le programme counter est maintenant à la valeur%lu\n",ra);
 }
 void jumpi(){
