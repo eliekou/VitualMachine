@@ -18,7 +18,7 @@ int IR;  //instruction register
 int opcode;
 int rd;
 int rs = 0;
-int im;
+u_int32_t im;
 
 int rs1;
 int rs2;
@@ -37,6 +37,7 @@ int go_on =1; //permet d'arréter en cas de stop
 int loop();
 
 void print_regs();
+void print_mem();
 
 int main(){//lire le fichier binaire en C ,le fichier binaire étant fourni par l'assembleur
     int to_read, nb_read, r, i;
@@ -74,7 +75,13 @@ void print_regs(){
     {
         printf("Le registre %d est égal à %d\n",i,regs[i]);
     }
-
+void print_mem(){
+    int a =0;
+    for (a =0;a<2048; i++)
+    {
+        printf("Le registre %d est égal à %d\n",a,mem[a]);
+    }
+}
 
 }
 void decode_R_instruction(uint32_t instr){
@@ -183,38 +190,38 @@ void divi(){
 }
 void and(){
     printf("and r%d r%d r%d\n", rd, rs1, rs2);
-    write_register(rd,regs[rs1]&&regs[rs2]);
+    write_register(rd,regs[rs1]&regs[rs2]);
 }
 void andi(){
     printf("and r%d r%d %d\n", rd, rs, im);
-    write_register(rd,regs[rs]&& im);
+    write_register(rd,regs[rs]& im);
 }
 void or(){
     printf("or  r%d r%d r%d\n", rd, rs1, rs2);
-    write_register(rd,regs[rs1]|regs[rs2]);
+    write_register(rd,regs[rs1]||regs[rs2]);
 }
 
 void ori(){
     printf("or r%d r%d %d\n", rd, rs, im);
-    write_register(rd,regs[rs]|im);
+    write_register(rd,regs[rs]||im);
 }
 
 void xor(){
     printf("xor  r%d r%d r%d\n", rd, rs1, rs2);
-    write_register(rd,regs[rs1]^regs[rs2]);
+    write_register(rd,regs[rs1] ^ regs[rs2]);
 }
 
 void xori(){
     printf("xori  r%d r%d %d\n", rd, rs, im);
-    write_register(rd,regs[rs]^im);
+    write_register(rd,regs[rs] ^ im);
 }
 void shl(){
     printf("shl  r%d r%d r%d\n", rd, rs1, rs2);
-    write_register(rd,regs[rs1]<<regs[rs2]);
+    write_register(rd,regs[rs1] << regs[rs2]);
 }
 void shli(){
     printf("shl r%d r%d %d\n", rd, rs, im);
-    write_register(rd,regs[rs]<< im);
+    write_register(rd,regs[rs] << im);
 }
 void shr(){
     printf("shr  r%d r%d r%d\n", rd, rs1, rs2);
@@ -234,12 +241,12 @@ void slti(){
 }
 void sle(){
     printf("sle r%d r%d r%d\n", rd, rs1, rs2);
-    write_register(rd,regs[rs1]<=regs[rs2]);
+    write_register(rd,regs[rs1] <= regs[rs2]);
 }
 void slei(){
     printf("sle r%d r%d %d\n", rd, rs, im);
     
-    write_register(rd,regs[rs]<=im);
+    write_register(rd,regs[rs] <= im);
 }
 void seq(){
     printf("seq r%d r%d r%d\n", rd, rs1, rs2);
@@ -253,19 +260,36 @@ void seqi(){
 //Rd,rs et im n'ont plus forcément autant de sens mais c'est le meme type I
 void load(){
     printf("load r%d r%d %d\n", rd, rs, im);
-    write_register(rd,mem[rs+im]);
+    if ((rs + im) > 2048){
+        printf("Error: superior to memory_size");
+
+    }
+    else{
+        printf("MEMORY_SIZE: OK-> proceed to load");
+        write_register(rd,mem[regs[rs]+im]);
+        printf("On a écrit dans le registre %d la valeur%d\n",rd,mem[regs[rs]+im]);
+    }
+    /*write_register(rd,mem[regs[rs]+im]);
+    printf("On a écrit dans le registre %d la valeur%d\n",rd,mem[regs[rs]+im]);*/
 }
 void store(){
     printf("store r%d r%d %d\n",rd,rs,im);
-    mem[rs+im]=rd;
+    if ((regs[rs]+im)> 2048 && (regs[rs]+im)<0){
+        printf("Error: impossible to store");
+    }
+    else{
+        mem[regs[rs]+im]=regs[rd];
+        printf("la  mem %d est égale à %d\n",regs[rs]+im,regs[rd]);
+    }
 
+    
 }
 void jump(){
     printf("jump r%d r%d\n",ra,rd);
     printf("Le programme counter est maintenant à la valeur%lu\n",ra);
     rd = PC;//On garde dans rd la valeur actuel du register
     PC = regs[ra];//PC=3??
-    printf("Le programme counter est maintenant à la valeur%lu\n",ra);
+    printf("Le programme counter 1 est maintenant à la valeur%lu\n",ra);
 }
 void jumpi(){
     printf("jumpi r%d %d\n",rd,addr);
@@ -298,9 +322,21 @@ void branz(){
     }
 }
 void scall(){
-    if (n ==1){
-        printf("r20 est égal à %lu\n",regs[20]);
-    } 
+    int userInput;
+    switch(n){
+        case 0:
+            printf("Input a number: ");
+            scanf("%d", &userInput);
+            write_register(20, userInput);
+            break;
+        case 1:
+            printf("r20 est égal à %lu\n",regs[20]);
+            break;
+        case 3:
+            printf("%c\n", regs[20] & 0x7f);
+            break;
+    }
+    
 }
 
 
@@ -339,7 +375,7 @@ int loop(){
             decode_JI_instruction(IR);
 
         }
-        if((opcode ==27)||(opcode ==28)){
+        if((opcode ==27)||(opcode ==29)){
             //Cas du load immediate et du store
             decode_I_instruction(IR);
         }

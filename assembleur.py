@@ -2,11 +2,7 @@ import re
 import numpy as np
 
 
-OP_CODES = {
-	'halt': 0, 'add': 1, 'sub': 2, 'mult': 3, 'div': 4, 'and': 5, 'or': 6,
-	'xor': 7, 'shl': 8, 'shr': 9, 'slt': 10, 'sle': 11, 'seq': 12, 'load': 13,
-	'store': 14, 'jmp': 15, 'braz': 16, 'branz': 17, 'scall': 18
-}
+
 
 
 #instruction_txt = "add r16 r2 r0"
@@ -204,7 +200,7 @@ DICT = {
             'typ':"I"
         },
         'store':{
-            'opcode':28,
+            'opcode':29,
             'regex':"^store\s+r(\d+),?\s+r(\d+),?\s+(-?(0x)?[0-9a-fA-F]+)$",
             'typ':"I"
         },
