@@ -8,7 +8,7 @@
 
 int mem[2084];//mémoire
 int regs[32];//registre
-int PC =0;
+int PC =0;//PROGRAMME COUNTER
 int IR;  //instruction register
 
 
@@ -75,15 +75,16 @@ void print_regs(){
     {
         printf("Le registre %d est égal à %d\n",i,regs[i]);
     }
+}
 void print_mem(){
     int a =0;
-    for (a =0;a<2048; i++)
+    for (a =0;a<2048; a++)
     {
         printf("Le registre %d est égal à %d\n",a,mem[a]);
     }
 }
 
-}
+
 void decode_R_instruction(uint32_t instr){
     //opcode = instr >> 26;
     rd = (instr >> 21) & 0x1f;
@@ -148,7 +149,7 @@ void write_register(int index, int value){
 void add(){
 
     printf("add r%d r%d r%d\n", rd, rs1, rs2);
-    write_register(rd,regs[rs1]+regs[rs2]);//utiliser un pointeur ici?
+    write_register(rd,regs[rs1]+regs[rs2]);
 
 }
 
@@ -260,7 +261,7 @@ void seqi(){
 //Rd,rs et im n'ont plus forcément autant de sens mais c'est le meme type I
 void load(){
     printf("load r%d r%d %d\n", rd, rs, im);
-    if ((rs + im) > 2048){
+    if ((rs + im) >= 2048){
         printf("Error: superior to memory_size");
 
     }
@@ -269,33 +270,38 @@ void load(){
         write_register(rd,mem[regs[rs]+im]);
         printf("On a écrit dans le registre %d la valeur%d\n",rd,mem[regs[rs]+im]);
     }
-    /*write_register(rd,mem[regs[rs]+im]);
-    printf("On a écrit dans le registre %d la valeur%d\n",rd,mem[regs[rs]+im]);*/
+    printf("On va maintenant print la mémoire\n");
+    
+    
 }
 void store(){
     printf("store r%d r%d %d\n",rd,rs,im);
-    if ((regs[rs]+im)> 2048 && (regs[rs]+im)<0){
+    if ((regs[rs]+im)>= 2048 && (regs[rs]+im)<= 0){
         printf("Error: impossible to store");
     }
     else{
         mem[regs[rs]+im]=regs[rd];
         printf("la  mem %d est égale à %d\n",regs[rs]+im,regs[rd]);
     }
+    printf("On va maintenant print la mémoire\n");
+    //print_mem();
 
     
 }
 void jump(){
     printf("jump r%d r%d\n",ra,rd);
     printf("Le programme counter est maintenant à la valeur%lu\n",ra);
-    rd = PC;//On garde dans rd la valeur actuel du register
-    PC = regs[ra];//PC=3??
+    write_register(rd,PC);
+    regs[rd] = PC;//On garde dans rd la valeur actuel du register
+    PC = regs[ra];
     printf("Le programme counter 1 est maintenant à la valeur%lu\n",ra);
 }
 void jumpi(){
     printf("jumpi r%d %d\n",rd,addr);
     printf("Le programme counter est ici avant le jump à la valeur%lu\n",PC);
-    rd = PC;
-    PC = addr;//PC=3??
+    //rd = PC; Attention il faut écrire le Programme counter dans le registre rd
+    write_register(rd,PC);
+    PC = addr;
     printf("Le programme counter est maintenant à la valeur%lu\n",addr);
 }
 //Puis viennent les branchements
@@ -333,7 +339,7 @@ void scall(){
             printf("r20 est égal à %lu\n",regs[20]);
             break;
         case 3:
-            printf("%c\n", regs[20] & 0x7f);
+            printf("SCALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL%c\n", regs[20] & 0x7f);
             break;
     }
     
@@ -357,11 +363,11 @@ int loop(){
         {
                 if ((opcode & 1) == 0){//regarde si l'opcode est pair, s'il l'ait c'est une instruction de type R
                     decode_R_instruction(IR);
-                    //printf("ggggg");
+                    
                 }
                 else{
                     decode_I_instruction(IR);
-                    //printf("ffff");
+                    
                 }
 
         }

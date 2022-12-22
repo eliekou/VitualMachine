@@ -261,7 +261,7 @@ DICT = {
         },
         'label':
         {
-            'regex':"\w+|[.+\w+]",
+            'regex':"\w+|[.+\w+:]",
             'typ':"label"
         }
 
@@ -453,7 +453,7 @@ while True:
                 ##print(line)
                 print(line[2])
                 label_use[a]= str(line[2])
-                print("LA clé slah indice va etre le label",line[2])
+                print("LA clé  indice va etre le label",line[2])
                 tableau[a]=instruction
                 a=a+1
                 break
@@ -464,10 +464,10 @@ while True:
 
             if DICT[i]['typ']=="label":
                 print("Il s'agit ici du label\n")
-                #line = line.split(":")
-                #print("La ligne va etre enfin la clé va etre  ,",line[0])
-                print(">J> kla clé a aller cherher va etre ",line)
-                labels[str(line)]=a
+                line = line.split(":")
+                print(" la clé va etre  ,",line[0])
+                #print("la clé a aller cherher va etre ",line)
+                labels[str(line[0])]=a
                 
                 break
 
